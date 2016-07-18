@@ -1,0 +1,21 @@
+{
+  "name": "budgetplanner",
+  "version": "1.0.0",
+  "description": "Tracks budget",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/javelinco/budgetPlanner.git"
+  },
+  "author": "Mark Munson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/javelinco/budgetPlanner/issues"
+  },
+  "dependencies": {
+    "express": "~4.14.0"
+  }
+}
