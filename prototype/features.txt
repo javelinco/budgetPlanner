@@ -1,0 +1,20 @@
+Ledger:
+- As a user, I want to be able to see an account and the transactions for that account, for a given month and year.
+- As a user, I want to be able to see the account balance on a specific account, for a given monh and year - the previous month's balance (at the end of the month), the balance at the end of the current month, the balance at today's date, and the balance currently cleared
+- As a user, I want to be able to see multiple accounts on a single page, in order to compare the balances and transacations between multiple accounts, or the same account for different months/years
+- As a user, I want to be able to add new items to the ledger, in order to track the date of the item, the category, the payee, the amount, and whether the item has cleared
+- As a user, I want to be able to move the account ledger around on the page, so I can sort and order the view
+- As a user, I want to be able to edit existing items in the ledger, and if the item is marked as cleared, I should be warned before a change is saved
+- As a user, I want to be able to have items that are the same category and month/year to collapse to a single line item. That line item should not show a specific date, nor a specific payee or clearance state, and should sum up the amounts for the category
+- As a user, I want to be able to see what is behind a collapsed category. I should be able to see that the category is collapsed, and be able to easily see the items, as well as edit them and mark them cleared
+
+Identity, Authentication and Authorization:
+- As a user, I want to be able to be identified uniquely within the application.
+- As a user, I want to be able to use the registration service from Facebook or Google to authenticate myself
+- As a user, I want to be able to access server resources only if I am authorized to do so
+- As a user, I want to be able to login using my account at Facebook or Google
+
+Account Manager:
+- As a user, I want to be able to create a new account to track.  The account should have a name, and a description
+- As a user, I want to be able to archive an account. An archived account cannot have further items added to the ledger related to the account
+- As a user, I want to be able to see a list of accounts, their names and descriptions, along with their balance information - current balance, balance at the end of the current month, and cleared balance
