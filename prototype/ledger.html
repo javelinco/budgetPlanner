@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Budget Planner - Ledger</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+        <div class="container account">
+            <div class="accountSelector">
+                <span class="bold">Account:</span> <select>
+                        <option selected="selected">Checking</option>
+                        <option>Visa</option>
+                    </select>
+            </div>
+            <div class="dateSelector"><span class="bold">Month/Year:</span> <input type="month" /></div>
+            <div class="balance">
+                <p><span class="bold">Balance:</span></p>
+                <p>
+                    <span><span class="bold">Previous:</span> $14,204.00</span>
+                    <span><span class="bold">Month:</span> $15,340.08</span>
+                </p>
+                <p>
+                    <span><span class="bold">Cleared:</span> $13,000.00</span>
+                    <span><span class="bold">Current:</span> $11,588.00</span>
+                </p>
+            </div>
+            <div class="itemList">
+                <p class="itemListHeader bold">
+                    <span class="itemListDate" title="Date">Date</span>
+                    <span class="itemListCategory" title="Category">Category</span>
+                    <span class="itemListDescription" title="Description">Description</span>
+                    <span class="itemListCleared" title="C">C</span>
+                    <span class="itemListAmount" title="Amount">Amount</span>
+                </p>
+                <p class="itemListRow">
+                    <span class="itemListDate" title="8/1/2017">8/1/2017</span>
+                    <span class="itemListCategory" title="Mortgage">Mortgage</span>
+                    <span class="itemListDescription" title="U.S. Bank Mortgage">U.S. Bank Mortgage</span>
+                    <span class="itemListCleared" title="True"><input type="checkbox" checked="checked" /></span>
+                    <span class="itemListAmount" title="(2,300.00)">(2,300.00)</span>
+                </p>
+                <p class="itemListRow">
+                    <span class="itemListDate" title="8/1/2017">8/1/2017</span>
+                    <span class="itemListCategory" title="Bank Charge">Bank Charge</span>
+                    <span class="itemListDescription" title="U.S. Bank">U.S. Bank</span>
+                    <span class="itemListCleared" title="False"><input type="checkbox" /></span>
+                    <span class="itemListAmount" title="(5.95)">(5.95)</span>
+                </p>
+                <p class="itemListRow">
+                    <span class="itemListDate" title="8/5/2017">8/5/2017</span>
+                    <span class="itemListCategory" title="Bill Consolidation">Bill Consolidation</span>
+                    <span class="itemListDescription" title="Making it overflow on purpose, to see what happens with property">Making it overflow on purpose, to see what happens with property</span>
+                    <span class="itemListCleared" title="False"><input type="checkbox" /></span>
+                    <span class="itemListAmount" title="153.00">153.00</span>
+                </p>
+            </div>
+            <div class="itemManager">
+                <p class="itemListRow">
+                    <span class="itemListDate"><input type="date" /></span>
+                    <span class="itemListCategory"><input type="text"></span>
+                    <span class="itemListDescription"><input type="text"></span>
+                    <span class="itemListCleared"><input type="checkbox" /></span>
+                    <span class="itemListAmount"><input type="number" /></span>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
