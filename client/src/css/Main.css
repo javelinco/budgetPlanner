@@ -1,0 +1,66 @@
+.bold {
+    font-weight: bold;
+}
+.accountSelector {
+    margin: 5px;
+    padding: 5px;
+}
+.dateSelector {
+    margin: 5px;
+    padding: 5px;
+}
+.itemList, .itemManager, .balance {
+    margin: 5px;
+    padding: 5px;
+    width: 600px;
+}
+.itemManager .itemListRow {
+    padding-top: 7px;
+}
+.itemList p, .itemManager p, .balance p {
+    margin: 0;
+    padding: 0;
+}
+.itemList p span, .itemManager p span {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 1px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.itemListHeader {
+    background-color: tan;
+}
+.itemListRow {
+    background-color: papayawhip;
+}
+.itemListDate {
+    width: 125px;
+}
+.itemListDate input {
+    width: 120px;
+}
+.itemListCategory {
+    width: 150px;
+}
+.itemListCategory input {
+    width: 145px;
+}
+.itemListDescription {
+    width: 150px;
+}
+.itemListDescription input {
+    width: 145px;
+}
+.itemListCleared {
+    text-align: center;
+    width: 25px;
+}
+.itemListAmount {
+    text-align: right;
+    width: 85px;
+}
+.itemListAmount input {
+    width: 84px;
+}
