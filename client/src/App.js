@@ -289,7 +289,7 @@ function BudgetItem(props) {
         <span className="itemListDate" title={props.date}>{moment(props.date).format("MM/DD/YYYY")}</span>
         <span className="itemListCategory" title={props.category}>{props.category}</span>
         <span className="itemListDescription" title={props.description}>{props.description}</span>
-        <span className="itemListCleared" title={props.cleared}><input type="checkbox" defaultValue={props.cleared} /></span>
+        <span className="itemListCleared" title={props.cleared}><input type="checkbox" defaultChecked={props.cleared} /></span>
         <span className="itemListAmount" title={FormatCurrency(props.amount)}>{FormatCurrency(props.amount)}</span>
     </p>
   )
