@@ -1,8 +1,8 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+var express = require("express");
+var bodyParser = require("body-parser");
 var app = express();
-var uuid = require('uuid/v4');
-var moment = require('moment');
+var uuid = require("uuid/v4");
+var moment = require("moment");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -12,19 +12,20 @@ var port = process.env.PORT || 8081
 var router = express.Router();
 
 router.use(function(req, res, next) {
-	console.log("API called.");
+	this.corsWhiteList(res);
+
 	next();
 })
 
-router.get('/accounts', function(req, res) {
+router.get("/accounts", function(req, res) {
 	res.end(JSON.stringify(accounts, null, 2));
 });
 
-router.get('/budgetItems', function(req, res) {
+router.get("/budgetItems", function(req, res) {
 	res.end(JSON.stringify(budgetItems, null, 2));
 });
 
-router.post('/budgetItem', function(req, res) {
+router.post("/budgetItem", function(req, res) {
 	var incoming = req.body;
 
 	var result = budgetItems.filter(function (budgetItem) {
@@ -39,17 +40,34 @@ router.post('/budgetItem', function(req, res) {
 	res.json(200);
 });
 
-router.get('/ledgerItems/:accountId', function(req, res) {
+router.get("/ledgerItems/:accountId", function(req, res) {
 	var accountLedgerItems = ledgerItems.filter(function(ledgerItem) {
 		return (ledgerItem.accountId === req.params.accountId);
 	});
 	res.end(JSON.stringify(accountLedgerItems, null, 2));
 });
 
-app.use('/api/v1', router);
+router.get("/ledgerItems/:accountId/:year/:month", function(req, res) {
+	var selectedMonth = moment(req.params.year + "-" + req.params.month + "-01T00:00:00.000-08:00");
+	var previousMonth = moment(selectedMonth).subtract(1, "months");
+	var accountLedgerItems = ledgerItems.filter(function(ledgerItem) {
+		var ledgerDate = moment(ledgerItem.date);
+		return (ledgerItem.accountId === req.params.accountId
+			&& (ledgerDate.isSame(selectedMonth, "month")
+			|| ledgerDate.isSame(previousMonth, "month")));
+	});
+	res.end(JSON.stringify(accountLedgerItems, null, 2));
+});
+
+app.use("/api/v1", router);
 
 app.listen(port);
 console.log("budgetPlannerApi listening at http://localhost:%s", port);
+
+corsWhiteList = (res) => {
+	res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+	res.header("Access-Control-Allow-Credentials", true);
+}
 
 var accounts = [
 	{ "accountId": "65e05f87-188c-468a-a364-dbc8acd56b69", "name": "Checking" },

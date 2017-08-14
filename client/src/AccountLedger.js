@@ -16,128 +16,94 @@ export default class AccountLedger extends React.Component {
     super(props);
 
     this.state = {
-      "accounts": [
-        { "accountId": "65e05f87-188c-468a-a364-dbc8acd56b69", "name": "Checking" },
-        { "accountId": "090e4960-df87-48b5-9a65-746c244be206", "name": "Visa" }
-      ],
-      "budgetItems": [
-        {
-          "budgetItemId": "247fbfd0-be07-44d3-81b5-35407c7bb667",
-          "accountId": "65e05f87-188c-468a-a364-dbc8acd56b69",
-          "date": moment("2017-07-01T00:00:00.000-08:00").toISOString(),
-          "category": "Mortgage",
-          "description": "U.S. Bank Mortgage",
-          "cleared": true,
-          "amount": -2300.00
-        },
-        {
-          "budgetItemId": "9c58ebcc-6c25-47d3-a400-37f7a628ffe1",
-          "accountId": "65e05f87-188c-468a-a364-dbc8acd56b69",
-          "date": moment("2017-07-03T00:00:00.00-08:00").toISOString(),
-          "category": "Bank Charge",
-          "description": "U.S. Bank",
-          "cleared": true,
-          "amount": -5.95
-        },
-        {
-          "budgetItemId": "4b3aec93-9b80-4283-90a3-a1022fcadb38",
-          "accountId": "65e05f87-188c-468a-a364-dbc8acd56b69",
-          "date": moment("2017-07-23T00:00:00.00-08:00").toISOString(),
-          "category": "Paycheck",
-          "description": "Employer Name",
-          "cleared": true,
-          "amount": 2400.00
-        },
-        {
-          "budgetItemId": "86f3d1a5-21c0-4104-8171-2e6f7c49acbb",
-          "accountId": "65e05f87-188c-468a-a364-dbc8acd56b69",
-          "date": moment("2017-08-01T00:00:00.000-08:00").toISOString(),
-          "category": "Mortgage",
-          "description": "U.S. Bank Mortgage",
-          "cleared": true,
-          "amount": -2300.00
-        },
-        {
-          "budgetItemId": "260ec1b1-ebea-4161-ae11-f3504c3b9ee9",
-          "accountId": "65e05f87-188c-468a-a364-dbc8acd56b69",
-          "date": moment("2017-08-01T00:00:00.000-08:00").toISOString(),
-          "category": "Bank Charge",
-          "description": "U.S. Bank",
-          "cleared": false,
-          "amount": -5.95
-        },
-        {
-          "budgetItemId": "e225b1ec-d86f-4cbd-94fe-c251163ece47",
-          "accountId": "65e05f87-188c-468a-a364-dbc8acd56b69",
-          "date": moment("2017-08-04T00:00:00.00-08:00").toISOString(),
-          "category": "Bill Consolidation",
-          "description": "Making it overflow on purpose, to see what happens with property",
-          "cleared": false,
-          "amount": 153.00
-        },
-        {
-          "budgetItemId": "5541bb6a-ae7f-4f0a-96d3-84329c92f3b1",
-          "accountId": "65e05f87-188c-468a-a364-dbc8acd56b69",
-          "date": moment("2017-08-23T00:00:00.00-08:00").toISOString(),
-          "category": "Paycheck",
-          "description": "Employer Name",
-          "cleared": false,
-          "amount": 2400.00
-        },
-        {
-          "budgetItemId": "013bd523-d109-4968-8e8a-c5d3b061acea",
-          "accountId": "090e4960-df87-48b5-9a65-746c244be206",
-          "date": moment("2017-08-07T00:00:00.00-08:00").toISOString(),
-          "category": "Haircut",
-          "description": "HairM",
-          "cleared": true,
-          "amount": -25.00
-        },
-        {
-          "budgetItemId": "01dfe563-1c81-43b8-b6be-9f8851aee97e",
-          "accountId": "090e4960-df87-48b5-9a65-746c244be206",
-          "date": moment("2017-08-11T00:00:00.00-08:00").toISOString(),
-          "category": "Natural Gas",
-          "description": "NW Natural",
-          "cleared": true,
-          "amount": -20.62
-        }
-      ],
+      "accounts": [],
+      "ledgerItems": [],
       "selectedMonth": moment().toISOString(),
       "selectedAccountId": "65e05f87-188c-468a-a364-dbc8acd56b69"
     };
   }
 
-
   getAccountId(selectedAccountName, accounts) {
-    return accounts.find(function(account) {
+    var account = accounts.find(function(account) {
         return (account.name === selectedAccountName);
-    }).accountId
+    });
+    if (account) {
+      return account.accountId;
+    } else {
+      return null;
+    }
   }
 
   getAccountName(selectedAccountId, accounts) {
-    return accounts.find(function(account) {
-        return (account.accountId === selectedAccountId);
-    }).name
+    var account = accounts.find(function(account) {
+      return (account.accountId === selectedAccountId);
+    });
+    if (account) {
+      return account.name;
+    } else {
+      return null;
+    }
+  }
+
+  componentDidMount = () => {
+      this.fetchAccounts(this);
+      this.fetchLedgerItems(this, this.state.selectedAccountId, this.state.selectedMonth);
+  }
+
+  fetchAccounts = (that) => {
+    fetch("http://localhost:8081/api/v1/accounts")
+    .then(function(response) {
+      if (response.status !== 200) {
+        throw new Error("Bad response from server");
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      that.setState({
+        "accounts": data,
+        "ledgerItems": that.state.ledgerItems,
+        "selectedMonth": that.state.selectedMonth,
+        "selectedAccountId": that.state.selectedAccountId
+      });
+    });
+  }
+
+  fetchLedgerItems = (that, selectedAccountId, selectedMonth) => {
+    var momentMonth = moment(selectedMonth);
+    fetch("http://localhost:8081/api/v1/ledgerItems/" + selectedAccountId + "/" + momentMonth.format("YYYY") + "/" + momentMonth.format("MM"))
+      .then(function(response) {
+        if (response.status !== 200) {
+          throw new Error("Bad response from server");
+        }
+        return response.json();
+      })
+      .then(function(data) {
+        that.setState({
+          "accounts": that.state.accounts,
+          "ledgerItems": data,
+          "selectedMonth": that.state.selectedMonth,
+          "selectedAccountId": selectedAccountId
+        });
+      });
   }
 
   handleMonthChange = (selectedMonth) => {
     this.setState({
       "accounts": this.state.accounts,
-      "budgetItems": this.state.budgetItems,
+      "ledgerItems": this.state.ledgerItems,
       "selectedMonth": moment(selectedMonth).toISOString(),
       "selectedAccountId": this.state.selectedAccountId
-    });
+    }, this.fetchLedgerItems(this, this.state.selectedAccountId, selectedMonth));
   }
 
   handleAccountChange = (selectedAccountName) => {
     var selectedAccountId = this.getAccountId(selectedAccountName, this.state.accounts);
     this.setState({
       "accounts": this.state.accounts,
-      "budgetItems": this.state.budgetItems,
+      "ledgerItems": this.state.ledgerItems,
       "selectedMonth": this.state.selectedMonth,
       "selectedAccountId": selectedAccountId
-    });
+    }, this.fetchLedgerItems(this, selectedAccountId, this.state.selectedMonth));
   }
 
   render() {
@@ -145,14 +111,14 @@ export default class AccountLedger extends React.Component {
     const selectedAccountId = this.state.selectedAccountId;
     const selectedAccountName = this.getAccountName(this.state.selectedAccountId, accounts);
     const selectedMonth = this.state.selectedMonth;
-    const budgetItems = this.state.budgetItems;
+    const ledgerItems = this.state.ledgerItems;
 
     return (
       <div className="container account">
         <AccountSelector accounts={accounts} selectedAccountName={selectedAccountName} onAccountChange={this.handleAccountChange} />
         <MonthSelector selectedMonth={selectedMonth} onMonthSelect={this.handleMonthChange} />
-        <Balance budgetItems={budgetItems} selectedMonth={selectedMonth} selectedAccountId={selectedAccountId} />
-        <BudgetList budgetItems={budgetItems} selectedMonth={selectedMonth} selectedAccountId={selectedAccountId} />
+        <Balance ledgerItems={ledgerItems} selectedMonth={selectedMonth} selectedAccountId={selectedAccountId} />
+        <LedgerList ledgerItems={ledgerItems} selectedMonth={selectedMonth} selectedAccountId={selectedAccountId} />
       </div>
     )
   }
@@ -162,12 +128,8 @@ class AccountSelector extends React.Component {
   constructor(props) {
     super(props);
 
-    var accounts = [];
-    this.props.accounts.forEach((account) => {
-      accounts.push(<option key={account.accountId}>{account.name}</option>);
-    });
     this.state = {
-      "accounts": accounts
+      "accounts": this.buildAccountOptions(this.props.accounts)
     };
   }
 
@@ -176,13 +138,21 @@ class AccountSelector extends React.Component {
     event.preventDefault();
   }
 
+  buildAccountOptions(accounts) {
+    var accountOptions = [];
+    accounts.forEach((account) => {
+      accountOptions.push(<option key={account.accountId}>{account.name}</option>);
+    });
+    return accountOptions;
+  }
+
   render() {
-    const accounts = this.state.accounts;
+    const accountOptions = this.buildAccountOptions(this.props.accounts);
     const selectedAccountName = this.props.selectedAccountName;
 
     return (
       <div className="accountSelector">
-          <span className="bold">Account:</span> <select onChange={this.selectAccount} defaultValue={selectedAccountName}>{accounts}</select>
+          <span className="bold">Account:</span> <select onChange={this.selectAccount} defaultValue={selectedAccountName}>{accountOptions}</select>
       </div>
     )
   }
@@ -190,34 +160,34 @@ class AccountSelector extends React.Component {
 
 class Balance extends React.Component {
   buildState = (props) => {
-    var previousMonth = moment(this.props.selectedMonth).add(-1, 'month')
     var currentMonth = moment(this.props.selectedMonth);
-    var previousMonthBalance = this.props.budgetItems.reduce((accumulator, budgetItem) => {
-        return (moment(budgetItem.date).isSame(previousMonth, 'month'))
-          ? accumulator + budgetItem.amount
+    var previousMonth = moment(currentMonth).add(-1, 'month');
+    var previousMonthBalance = this.props.ledgerItems.reduce((accumulator, ledgerItem) => {
+        return (moment(ledgerItem.date).isSame(previousMonth, 'month'))
+          ? accumulator + ledgerItem.amount
           : accumulator;
       }, 0);
 
     return {
       "previousMonthBalance": previousMonthBalance,
-      "endMonthBalance": this.props.budgetItems.reduce((accumulator, budgetItem) => {
-          return (moment(budgetItem.date).isSame(currentMonth, 'month')
-            && budgetItem.accountId === this.props.selectedAccountId)
-            ? accumulator + budgetItem.amount
+      "endMonthBalance": this.props.ledgerItems.reduce((accumulator, ledgerItem) => {
+          return (moment(ledgerItem.date).isSame(currentMonth, 'month')
+            && ledgerItem.accountId === this.props.selectedAccountId)
+            ? accumulator + ledgerItem.amount
             : accumulator;
         }, previousMonthBalance),
-      "clearedBalance": this.props.budgetItems.reduce((accumulator, budgetItem) => {
-          return (moment(budgetItem.date).isSame(currentMonth, 'month')
-            && budgetItem.cleared
-            && budgetItem.accountId === this.props.selectedAccountId)
-            ? accumulator + budgetItem.amount
+      "clearedBalance": this.props.ledgerItems.reduce((accumulator, ledgerItem) => {
+          return (moment(ledgerItem.date).isSame(currentMonth, 'month')
+            && ledgerItem.cleared
+            && ledgerItem.accountId === this.props.selectedAccountId)
+            ? accumulator + ledgerItem.amount
             : accumulator;
         }, previousMonthBalance),
-      "currentBalance": this.props.budgetItems.reduce((accumulator, budgetItem) => {
-          return (moment(budgetItem.date).isSame(currentMonth, 'month')
-            && moment(budgetItem.date).isSameOrBefore(currentMonth, 'date')
-            && budgetItem.accountId === this.props.selectedAccountId)
-            ? accumulator + budgetItem.amount
+      "currentBalance": this.props.ledgerItems.reduce((accumulator, ledgerItem) => {
+          return (moment(ledgerItem.date).isSame(currentMonth, 'month')
+            && moment(ledgerItem.date).isSameOrBefore(currentMonth, 'date')
+            && ledgerItem.accountId === this.props.selectedAccountId)
+            ? accumulator + ledgerItem.amount
             : accumulator;
         }, previousMonthBalance)
     };
@@ -247,25 +217,25 @@ class Balance extends React.Component {
   }
 }
 
-class BudgetList extends React.Component {
+class LedgerList extends React.Component {
   buildState = (props) => {
-    var selectedMonthBudgetItems = [];
-    this.props.budgetItems.forEach((budgetItem) => {
-      if (moment(budgetItem.date).isSame(this.props.selectedMonth, 'month')
-            && budgetItem.accountId === this.props.selectedAccountId) {
-        selectedMonthBudgetItems.push(<BudgetItem key={budgetItem.budgetItemId} date={budgetItem.date} category={budgetItem.category} description={budgetItem.description} cleared={budgetItem.cleared} amount={budgetItem.amount} />);
+    var selectedMonthLedgerItems = [];
+    this.props.ledgerItems.forEach((ledgerItem) => {
+      if (moment(ledgerItem.date).isSame(this.props.selectedMonth, 'month')
+            && ledgerItem.accountId === this.props.selectedAccountId) {
+        selectedMonthLedgerItems.push(<LedgerItem key={ledgerItem.ledgerItemId} date={ledgerItem.date} category={ledgerItem.category} description={ledgerItem.description} cleared={ledgerItem.cleared} amount={ledgerItem.amount} />);
       }
     });
 
     return {
-      "selectedMonthBudgetItems": selectedMonthBudgetItems
+      "selectedMonthLedgerItems": selectedMonthLedgerItems
     };
   }
 
   render() {
     const state = this.buildState(this.props);
 
-    const selectedMonthBudgetItems = state.selectedMonthBudgetItems;
+    const selectedMonthLedgerItems = state.selectedMonthLedgerItems;
 
     return (
       <div className="itemList">
@@ -276,13 +246,13 @@ class BudgetList extends React.Component {
               <span className="itemListCleared" title="C">C</span>
               <span className="itemListAmount" title="Amount">Amount</span>
           </p>
-          {selectedMonthBudgetItems}
+          {selectedMonthLedgerItems}
       </div>    
     )
   }
 }
 
-function BudgetItem(props) {
+function LedgerItem(props) {
   return (
     <p className="itemListRow">
         <span className="itemListDate" title={props.date}>{moment(props.date).format("MM/DD/YYYY")}</span>
