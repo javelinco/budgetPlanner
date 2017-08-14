@@ -123,28 +123,22 @@ class Account extends React.Component {
   }
 
   handleMonthChange = (selectedMonth) => {
-    console.log("Month selector value changed: " + moment(selectedMonth).toISOString() + ".");
     this.setState({
       "accounts": this.state.accounts,
       "budgetItems": this.state.budgetItems,
       "selectedMonth": moment(selectedMonth).toISOString(),
       "selectedAccountId": this.state.selectedAccountId
-    }, () => { console.log(this.state); });
+    });
   }
 
   handleAccountChange = (selectedAccountName) => {
     var selectedAccountId = this.getAccountId(selectedAccountName, this.state.accounts);
-    console.log("Account selector value changed: Name: " + selectedAccountName + "; Id: " + selectedAccountId + ".");
     this.setState({
       "accounts": this.state.accounts,
       "budgetItems": this.state.budgetItems,
       "selectedMonth": this.state.selectedMonth,
       "selectedAccountId": selectedAccountId
-    }, () => { console.log(this.state); });
-  }
-
-  componentWillUpdate() {
-    console.log("Account rendered.")
+    });
   }
 
   render() {
