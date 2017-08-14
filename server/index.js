@@ -16,11 +16,11 @@ app.post('/api/v1/budgetItem', function (req, res) {
 	var incoming = req.body;
 
 	var result = budgetItems.filter(function (budgetItem) {
-		return budgetItem.BudgetItemId === incoming.BudgetItemId;
+		return budgetItem.budgetItemId === incoming.budgetItemId;
 	})[0];
 
 	if (!result) {
-		incoming.BudgetItemId = uuid.v4();
+		incoming.budgetItemId = uuid.v4();
 		budgetItems.push(incoming);
 	}
 
@@ -31,5 +31,5 @@ var server = app.listen(8081, function () {
 	var host = server.address().address;
 	var port = server.address().port;
 
-	console.log("budgetPlanner listening at http://%s:%s", host, port);
+	console.log("budgetPlannerApi listening at http://%s:%s", host, port);
 });
