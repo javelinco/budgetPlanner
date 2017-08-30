@@ -6,9 +6,10 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY package.json .
 RUN npm install
+RUN npm install -g serve
 
 # Bundle app source
-COPY . .
+COPY /build/ ./build
 
-EXPOSE 3000
-CMD [ "npm", "start" ]
+EXPOSE 5000
+CMD [ "serve", "-s", "build" ]
